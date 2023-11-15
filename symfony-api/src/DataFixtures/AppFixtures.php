@@ -12,31 +12,33 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AppFixtures extends Fixture
 {
     private $userPasswordHasherInterface;
-    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface){
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface)
+    {
         $this->userPasswordHasherInterface = $userPasswordHasherInterface;
     }
 
     public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager);
-        $this-> loadTaskLists($manager);
+        $this->loadTaskLists($manager);
         $this->loadTasks($manager);
     }
 
-    public function loadTaskLists(ObjectManager $manager): void {
-        $name ="Task List";
+    public function loadTaskLists(ObjectManager $manager): void
+    {
+        $name = "Task List";
         $description = "Task List for User";
 
         for ($i = 0; $i < 10; $i++) {
-            $user = $this->getReference("user_admin".$i);
+            $user = $this->getReference("user_admin" . $i);
 
-            $taskList= new TaskList;
-            $taskList->setName($name.$i);
-            $taskList->setDescription($description.$i);
+            $taskList = new TaskList;
+            $taskList->setName($name . $i);
+            $taskList->setDescription($description . $i);
             $taskList->setCreationDate(new \DateTime(""));
             $taskList->setDeleted(false);
             $taskList->setAuthor($user);
-            $this->setReference("task_list".$i, $taskList);
+            $this->setReference("task_list" . $i, $taskList);
 
             $manager->persist($taskList);
         }
@@ -44,22 +46,23 @@ class AppFixtures extends Fixture
         $manager->clear();
     }
 
-    public function loadTasks(ObjectManager $manager): void {
+    public function loadTasks(ObjectManager $manager): void
+    {
         $dueDate = new \DateTime("");
         $dueDate->modify("+1 month");
 
         for ($i = 0; $i < 10; $i++) {
-            $name ="# task to do for list ".$i;
-            $user = $this->getReference("user_admin".$i);
-            $taskList = $this->getReference("task_list".$i);
-            
-            for ($ib = 0; $ib < 3; $ib++){
+            $name = "# task to do for list " . $i;
+            $user = $this->getReference("user_admin" . $i);
+            $taskList = $this->getReference("task_list" . $i);
 
-                $isCompleted= $ib % 2 == 0;
+            for ($ib = 0; $ib < 3; $ib++) {
 
-                $task= new Task;
-                $taskNumber= $ib +1;
-                $task->setName($taskNumber.$name);
+                $isCompleted = $ib % 2 == 0;
+
+                $task = new Task;
+                $taskNumber = $ib + 1;
+                $task->setName($taskNumber . $name);
                 $task->setDueDate($dueDate);
                 $task->setCreationDate(new \DateTime(""));
                 $task->setDeleted(false);
@@ -70,34 +73,35 @@ class AppFixtures extends Fixture
 
                 $manager->persist($task);
             }
-        }  
+        }
         $manager->flush();
         $manager->clear();
     }
 
-    public function loadUsers(ObjectManager $manager): void {
-        $username ="User";
+    public function loadUsers(ObjectManager $manager): void
+    {
+        $username = "User";
         $email = "@test.fr";
 
         for ($i = 0; $i < 10; $i++) {
-        $password = $username.$i."secret#";
+            $password = $username . $i . "secret#";
 
 
-        $user = new User;
-        $user->setUsername($username.$i);
-        $user->setEmail($username.$i.$email);
-        $user->setRoles([]);
-        $user->setCreationDate(new \DateTime(""));
+            $user = new User;
+            $user->setUsername($username . $i);
+            $user->setEmail($username . $i . $email);
+            $user->setRoles([]);
+            $user->setCreationDate(new \DateTime(""));
 
-        $hashedPassword = $this->userPasswordHasherInterface->hashPassword(
-            $user,
-            $password
-        );
-        $user->setPassword($hashedPassword);
+            $hashedPassword = $this->userPasswordHasherInterface->hashPassword(
+                $user,
+                $password
+            );
+            $user->setPassword($hashedPassword);
 
-        $this->setReference("user_admin".$i, $user);
+            $this->setReference("user_admin" . $i, $user);
 
-        $manager->persist($user);
+            $manager->persist($user);
         }
         $manager->flush();
         $manager->clear();
