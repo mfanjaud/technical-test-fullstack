@@ -5,6 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TaskListRepository;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\User;
+use App\Entity\Task;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskListRepository::class)]
@@ -25,11 +28,19 @@ class TaskList
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTimeInterface $creationDate;
 
-    #[ORM\Column]
-    private int $authorId;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'taskLists')]
+    #[ORM\JoinColumn(nullable:false)]
+    private $author;
+
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'taskList')]
+    private $tasks;
 
     #[ORM\Column]
     private bool $deleted;
+
+       public function __construct(){
+        $this->tasks = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -79,18 +90,6 @@ class TaskList
         return $this;
     }
 
-    public function getAuthorId(): int
-    {
-        return $this->authorId;
-    }
-
-    public function setAuthorId(int $authorId): static
-    {
-        $this->authorId = $authorId;
-
-        return $this;
-    }
-
     public function isDeleted(): bool
     {
         return $this->deleted;
@@ -101,5 +100,19 @@ class TaskList
         $this->deleted = $deleted;
 
         return $this;
+    }
+
+    public function getAuthor(): User {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): self {
+         $this->author = $author;
+
+         return $this;
+    }
+
+    public function getTasks(): ArrayCollection{
+        return $this->tasks;
     }
 }

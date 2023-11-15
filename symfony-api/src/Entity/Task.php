@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TaskRepository;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
@@ -22,11 +23,13 @@ class Task
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dueDate = null;
 
-    #[ORM\Column]
-    private int $taskListId;
+    #[ORM\ManyToOne(targetEntity: TaskList::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable:false)]
+    private $taskList;
 
-    #[ORM\Column]
-    private int $authorId;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
+    #[ORM\JoinColumn(nullable:false)]
+    private $author;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private \DateTimeInterface $creationDate;
@@ -73,30 +76,6 @@ class Task
         return $this;
     }
 
-    public function getTaskListId(): int
-    {
-        return $this->taskListId;
-    }
-
-    public function setTaskListId(int $taskListId): static
-    {
-        $this->taskListId = $taskListId;
-
-        return $this;
-    }
-
-    public function getAuthorId(): int
-    {
-        return $this->authorId;
-    }
-
-    public function setAuthorId(int $authorId): static
-    {
-        $this->authorId = $authorId;
-
-        return $this;
-    }
-
     public function getCreationDate(): \DateTimeInterface
     {
         return $this->creationDate;
@@ -131,5 +110,25 @@ class Task
         $this->deleted = $deleted;
 
         return $this;
+    }
+
+    public function getAuthor(): User {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): self {
+         $this->author = $author;
+
+         return $this;
+    }
+
+    public function getTaskList(): TaskList {
+        return $this->taskList;
+    }
+
+    public function setTaskList(TaskList $taskList): self {
+         $this->taskList = $taskList;
+
+         return $this;
     }
 }
