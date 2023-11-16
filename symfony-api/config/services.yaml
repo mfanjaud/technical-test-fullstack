@@ -25,5 +25,12 @@ services:
 
   App\EventListener\:
     resource: "../src/EventListener/"
+    tags: ["doctrine.orm.entity_listener"]
+
+  App\EventListener\AuthoredEntityListener:
     arguments: ["@security.token_storage"]
+    tags: ["doctrine.orm.entity_listener"]
+
+  App\EventListener\CreatedDateEntityListener:
+    arguments: ["@request_stack"]
     tags: ["doctrine.orm.entity_listener"]

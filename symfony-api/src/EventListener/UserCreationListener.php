@@ -2,11 +2,11 @@
 
 namespace App\EventListener;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserCreationListener
 {
@@ -19,9 +19,9 @@ class UserCreationListener
     }
 
     #[ORM\PrePersist]
-    public function prePersist(User $user, LifecycleEventArgs $args): void
+    public function prePersist(User $user, PrePersistEventArgs $args): void
     {
-        $user->setCreationDate(new \DateTime(""));
+        $user->setCreatedAt(new \DateTime(""));
 
         $password = $user->getPassword();
         $password = $this->encodePassword($user, $password);
@@ -31,7 +31,6 @@ class UserCreationListener
     #[ORM\PreUpdate]
     public function preUpdate(User  $user, PreUpdateEventArgs $args): void
     {
-        $user->setCreationDate(new \DateTime(""));
 
         if ($args->hasChangedField('password')) {
             $password = $args->getNewValue('password');

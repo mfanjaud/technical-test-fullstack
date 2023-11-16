@@ -35,7 +35,7 @@ class AppFixtures extends Fixture
             $taskList = new TaskList;
             $taskList->setName($name . $i);
             $taskList->setDescription($description . $i);
-            $taskList->setCreationDate(new \DateTime(""));
+            $taskList->setCreatedAt(new \DateTime(""));
             $taskList->setDeleted(false);
             $taskList->setAuthor($user);
             $this->setReference("task_list" . $i, $taskList);
@@ -64,7 +64,7 @@ class AppFixtures extends Fixture
                 $taskNumber = $ib + 1;
                 $task->setName($taskNumber . $name);
                 $task->setDueDate($dueDate);
-                $task->setCreationDate(new \DateTime(""));
+                $task->setCreatedAt(new \DateTime(""));
                 $task->setDeleted(false);
                 $task->setAuthor($user);
                 $task->setTaskList($taskList);
@@ -91,7 +91,7 @@ class AppFixtures extends Fixture
             $user->setUsername($username . $i);
             $user->setEmail($username . $i . $email);
             $user->setRoles([]);
-            $user->setCreationDate(new \DateTime(""));
+            $user->setCreatedAt(new \DateTime(""));
 
             $hashedPassword = $this->userPasswordHasherInterface->hashPassword(
                 $user,

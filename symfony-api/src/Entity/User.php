@@ -5,16 +5,17 @@ namespace App\Entity;
 use App\Entity\Task;
 use App\Entity\TaskList;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use App\EventListener\CreatedDateEntityListener;
-use App\Interface\CreatedDateEntityInterface;
 use App\EventListener\UserCreationListener;
 use Doctrine\Common\Collections\Collection;
+use App\Interface\CreatedDateEntityInterface;
+use App\EventListener\CreatedDateEntityListener;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -30,41 +31,57 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     CreatedDateEntityListener::class
 ])]
 #[ApiResource(
-    operations: [new Get(), new GetCollection(), new Post()],
-    normalizationContext: ['groups' => ['read']],
-    security: "is_granted('IS_AUTHENTICATED_FULLY')" // TODO - allow new user to register
+    operations: [
+        new Get(
+            uriTemplate: "/user/{id}",
+            security: "is_granted('IS_AUTHENTICATED_FULLY')",
+        ),
+        new GetCollection(),
+        new Post(denormalizationContext: ['groups' => ['post']]),
+        // new Put(
+        //     uriTemplate: "/user/{id}",
+        //     security: "is_granted('IS_AUTHENTICATED_FULLY') and object == user",
+        //     denormalizationContext: ['groups' => ['put']],
+        //     deserialize: false,
+        // )
+    ],
+    normalizationContext: ['groups' => ['get']],
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CreatedDateEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read'])]
+    #[Groups(['get'])]
     private int $id;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['get', 'post', 'put'])]
     #[Assert\NotBlank()]
     #[Assert\Length(null, 6, 255)]
     private string $username;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank(groups: ["post"])]
+    #[Groups(['post'])]
     #[Assert\Regex(
         "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-        "Password must be at least 7 characters long and contain at least : one digit, one upper case letter and one lower case letter."
+        "Password must be at least 7 characters long and contain at least : one digit, one upper case letter and one lower case letter.",
+        groups: ["post"]
     )]
     private string $password;
 
-    #[Assert\NotBlank()]
+    #[Assert\NotBlank(groups: ["post"])]
+    #[Groups(['post'])]
     #[Assert\Expression(
         "this.getPassword() === this.getConfirmPassword()",
-        "Passwords do not match."
+        "Passwords do not match.",
+        groups: ["post"]
     )]
     private string $confirmPassword;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['post'])]
     #[Assert\NotBlank()]
     #[Assert\Email()]
     private string $email;
@@ -73,14 +90,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
     private array $roles = [];
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private \DateTimeInterface $creationDate;
+    private \DateTimeInterface $createdAt;
 
     #[ORM\OneToMany(targetEntity: TaskList::class, mappedBy: 'author')]
-    #[Groups(['read'])]
     private $taskLists;
 
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'author')]
-    #[Groups(['read'])]
     private $tasks;
 
     public function __construct()
@@ -122,7 +137,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getConfirmPassword(): string
+    public function getConfirmPassword(): ?string
     {
         return $this->confirmPassword;
     }
@@ -158,14 +173,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this;
     }
 
-    public function getCreationDate(): \DateTimeInterface
+    public function getCreatedAt(): \DateTimeInterface
     {
-        return $this->creationDate;
+        return $this->createdAt;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): CreatedDateEntityInterface
+    public function setCreatedAt(\DateTimeInterface $createdAt): CreatedDateEntityInterface
     {
-        $this->creationDate = $creationDate;
+        $this->createdAt = $createdAt;
         return $this;
     }
 

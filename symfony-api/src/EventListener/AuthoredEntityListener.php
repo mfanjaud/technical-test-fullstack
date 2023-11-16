@@ -2,9 +2,10 @@
 
 namespace App\EventListener;
 
-use App\Interface\AuthoredEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use App\Interface\AuthoredEntityInterface;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\UsageTrackingTokenStorage;
 
 class AuthoredEntityListener
@@ -17,7 +18,7 @@ class AuthoredEntityListener
     }
 
     #[ORM\PrePersist]
-    public function prePersist(AuthoredEntityInterface $entity, LifecycleEventArgs $args): void
+    public function prePersist(AuthoredEntityInterface $entity, PrePersistEventArgs $args): void
     {
         $token = $this->tokenStorage->getToken();
 
@@ -32,5 +33,10 @@ class AuthoredEntityListener
         }
 
         $entity->setAuthor($author);
+    }
+
+    #[ORM\PreUpdate]
+    public function preUpdate(AuthoredEntityInterface $entity, PreUpdateEventArgs $args): void
+    {
     }
 }

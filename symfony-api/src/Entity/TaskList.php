@@ -6,65 +6,81 @@ use App\Entity\Task;
 use App\Entity\User;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
-use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TaskListRepository;
 use ApiPlatform\Metadata\GetCollection;
 use App\Interface\AuthoredEntityInterface;
-use App\Interface\CreatedDateEntityInterface;
 use Doctrine\Common\Collections\Collection;
 use App\EventListener\AuthoredEntityListener;
+use App\Interface\CreatedDateEntityInterface;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use App\EventListener\CreatedDateEntityListener;
-use App\EventListener\TaskListCreationListener;
 use Doctrine\Common\Collections\ArrayCollection;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskListRepository::class)]
 #[ORM\EntityListeners([
-    TaskListCreationListener::class,
     AuthoredEntityListener::class,
     CreatedDateEntityListener::class
 ])]
 #[ApiResource(
-    operations: [new Get(), new GetCollection()],
-    normalizationContext: ['groups' => ['read']],
+    operations: [
+        new Get(
+            uriTemplate: "/task_list/{id}",
+        ),
+        new GetCollection(order: ['createdAt' => 'DESC']),
+        new Post(
+            security: "is_granted('IS_AUTHENTICATED_FULLY')",
+        ),
+        new Delete(
+            uriTemplate: "/task_list/{id}",
+            security: "is_granted('IS_AUTHENTICATED_FULLY') and object.getAuthor() == user",
+        )
+    ],
+    normalizationContext: ['groups' => ['get']],
+    denormalizationContext: ['groups' => ['post']],
 )]
-#[Post(security: "is_granted('IS_AUTHENTICATED_FULLY')")]
-
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
+#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
+#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'name'])]
 class TaskList implements AuthoredEntityInterface, CreatedDateEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read'])]
+    #[Groups(['get'])]
     private int $id;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['get', 'post'])]
     #[Assert\NotBlank()]
     #[Assert\Length(null, 3, 255)]
     private string $name;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read'])]
+    #[Groups(['get', 'post'])]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private \DateTimeInterface $creationDate;
+    #[ORM\Column(type: "datetime")]
+    #[Groups(['get'])]
+    private \DateTime $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'taskLists')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['read'])]
-    private $author;
+    #[Groups(['get'])]
+    private User $author;
 
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'taskList')]
-    #[Groups(['read'])]
+    #[OrderBy(["dueDate" => "ASC", "completed" => "ASC"])]
+    #[Groups(['get'])]
     private $tasks;
-
-    #[ORM\Column]
-    private bool $deleted;
 
     public function __construct()
     {
@@ -107,26 +123,14 @@ class TaskList implements AuthoredEntityInterface, CreatedDateEntityInterface
         return $this;
     }
 
-    public function getCreationDate(): \DateTimeInterface
+    public function getCreatedAt(): ?\DateTime
     {
-        return $this->creationDate;
+        return $this->createdAt;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): CreatedDateEntityInterface
+    public function setCreatedAt(\DateTime $createdAt): CreatedDateEntityInterface
     {
-        $this->creationDate = $creationDate;
-
-        return $this;
-    }
-
-    public function isDeleted(): bool
-    {
-        return $this->deleted;
-    }
-
-    public function setDeleted(bool $deleted): static
-    {
-        $this->deleted = $deleted;
+        $this->createdAt = $createdAt;
 
         return $this;
     }

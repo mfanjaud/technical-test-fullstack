@@ -2,21 +2,36 @@
 
 namespace App\EventListener;
 
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use App\Interface\CreatedDateEntityInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use App\Interface\CreatedDateEntityInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class CreatedDateEntityListener
 {
 
-    #[ORM\PrePersist]
-    public function prePersist(CreatedDateEntityInterface $entity, LifecycleEventArgs $args): void
-    {
+    private $requestStack;
+    public function __construct(
+        RequestStack $requestStack,
+    ) {
+        $this->requestStack = $requestStack;
+    }
 
-        if (!$entity instanceof CreatedDateEntityInterface) {
+    #[ORM\PrePersist]
+    public function prePersist(CreatedDateEntityInterface $entity, PrePersistEventArgs $args): void
+    {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$entity instanceof CreatedDateEntityInterface || !$request->isMethod("POST")) {
             return;
         }
 
-        $entity->setCreationDate(new \DateTime(""));
+        $entity->setCreatedAt(new \DateTime(""));
+    }
+
+    #[ORM\PreUpdate]
+    public function preUpdate(CreatedDateEntityInterface $entity, PreUpdateEventArgs $args): void
+    {
     }
 }
