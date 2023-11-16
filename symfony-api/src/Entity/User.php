@@ -2,33 +2,39 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Entity\Task;
+use App\Entity\TaskList;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\TaskList;
-use App\Entity\Task;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use ApiPlatform\Metadata\Get;
+use App\Repository\UserRepository;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use App\EventListener\UserListener;
+use App\EventListener\CreatedDateEntityListener;
+use App\Interface\CreatedDateEntityInterface;
+use App\EventListener\UserCreationListener;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[UniqueEntity(["email"])]
 #[UniqueEntity("username")]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\EntityListeners([UserListener::class])]
+#[ORM\EntityListeners([
+    UserCreationListener::class,
+    CreatedDateEntityListener::class
+])]
 #[ApiResource(
     operations: [new Get(), new GetCollection(), new Post()],
     normalizationContext: ['groups' => ['read']],
+    security: "is_granted('IS_AUTHENTICATED_FULLY')" // TODO - allow new user to register
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, CreatedDateEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -157,7 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): static
+    public function setCreationDate(\DateTimeInterface $creationDate): CreatedDateEntityInterface
     {
         $this->creationDate = $creationDate;
         return $this;

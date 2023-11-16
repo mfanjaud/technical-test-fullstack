@@ -25,4 +25,5 @@ services:
 
   App\EventListener\:
     resource: "../src/EventListener/"
+    arguments: ["@security.token_storage"]
     tags: ["doctrine.orm.entity_listener"]

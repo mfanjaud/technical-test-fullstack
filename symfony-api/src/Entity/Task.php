@@ -2,23 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\TaskRepository;
-use Doctrine\DBAL\Types\Types;
 use App\Entity\User;
-use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\Get;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TaskRepository;
+use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use App\EventListener\TaskListener;
+use App\Interface\AuthoredEntityInterface;
+use App\EventListener\TaskCreationListener;
+use App\EventListener\AuthoredEntityListener;
+use App\Interface\CreatedDateEntityInterface;
+use App\EventListener\CreatedDateEntityListener;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
-#[ORM\EntityListeners([TaskListener::class])]
+#[ORM\EntityListeners([
+    TaskCreationListener::class,
+    AuthoredEntityListener::class,
+    CreatedDateEntityListener::class
+])]
 #[ApiResource(
     operations: [new Get(), new GetCollection()],
     normalizationContext: ['groups' => ['read']],
 )]
-class Task
+class Task implements AuthoredEntityInterface, CreatedDateEntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -95,7 +103,7 @@ class Task
         return $this->creationDate;
     }
 
-    public function setCreationDate(\DateTimeInterface $creationDate): static
+    public function setCreationDate(\DateTimeInterface $creationDate): CreatedDateEntityInterface
     {
         $this->creationDate = $creationDate;
 
@@ -131,7 +139,7 @@ class Task
         return $this->author;
     }
 
-    public function setAuthor(User $author): self
+    public function setAuthor(User $author): AuthoredEntityInterface
     {
         $this->author = $author;
 
