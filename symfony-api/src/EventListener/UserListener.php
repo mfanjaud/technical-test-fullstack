@@ -8,7 +8,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class UserCreationListener
+class UserListener
 {
 
     private $userPasswordHasherInterface;

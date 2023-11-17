@@ -5,14 +5,13 @@ namespace App\Entity;
 use App\Entity\Task;
 use App\Entity\TaskList;
 use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use App\EventListener\UserCreationListener;
+use App\EventListener\UserListener;
 use Doctrine\Common\Collections\Collection;
 use App\Interface\CreatedDateEntityInterface;
 use App\EventListener\CreatedDateEntityListener;
@@ -27,7 +26,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[UniqueEntity("username")]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\EntityListeners([
-    UserCreationListener::class,
+    UserListener::class,
     CreatedDateEntityListener::class
 ])]
 #[ApiResource(

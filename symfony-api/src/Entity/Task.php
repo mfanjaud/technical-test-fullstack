@@ -10,16 +10,18 @@ use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TaskRepository;
 use ApiPlatform\Metadata\ApiFilter;
+use App\EventListener\TaskListener;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
 use App\Interface\AuthoredEntityInterface;
-use App\EventListener\TaskListener;
 use App\EventListener\AuthoredEntityListener;
 use App\Interface\CreatedDateEntityInterface;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use App\EventListener\CreatedDateEntityListener;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 #[ORM\EntityListeners([
@@ -31,6 +33,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     operations: [
         new Get(
             uriTemplate: "/task/{id}",
+            cacheHeaders: [
+                'max_age' => 60,
+                'shared_max_age' => 120
+            ]
         ),
         new GetCollection(
             order: ["dueDate" => "ASC", "completed" => "ASC"],
@@ -51,6 +57,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial'])]
 #[ApiFilter(OrderFilter::class, properties: ['createdAt', 'name', 'dueDate', 'completed'])]
+#[ApiProperty(fetchEager: true)]
 class Task implements AuthoredEntityInterface, CreatedDateEntityInterface
 {
     #[ORM\Id]
@@ -60,6 +67,7 @@ class Task implements AuthoredEntityInterface, CreatedDateEntityInterface
     private int $id;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
     #[Groups(['get', 'post'])]
     private string $name;
 
