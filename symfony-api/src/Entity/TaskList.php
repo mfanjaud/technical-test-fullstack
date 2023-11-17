@@ -31,6 +31,7 @@ use Symfony\Component\Validator\Constraints as Assert;
     CreatedDateEntityListener::class
 ])]
 #[ApiResource(
+    paginationClientItemsPerPage: true,
     operations: [
         new Get(
             uriTemplate: "/task_list/{id}",

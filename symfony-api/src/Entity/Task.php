@@ -32,7 +32,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Get(
             uriTemplate: "/task/{id}",
         ),
-        new GetCollection(order: ["dueDate" => "ASC", "completed" => "ASC"]),
+        new GetCollection(
+            order: ["dueDate" => "ASC", "completed" => "ASC"],
+            paginationEnabled: false
+        ),
         new Post(
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
         ),

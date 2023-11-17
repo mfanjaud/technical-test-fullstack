@@ -1,13 +1,18 @@
 api_platform:
-  title: Hello API Platform
+  title: MPP Test API Platform
   version: 1.0.0
   formats:
+    jsonld: ["application/ld+json"]
     json: ["application/json"]
   docs_formats:
+    jsonld: ["application/ld+json"]
     json: ["application/json"]
     jsonopenapi: ["application/vnd.openapi+json"]
     html: ["text/html"]
   defaults:
+    pagination_enabled: true
+    pagination_items_per_page: 6
+    pagination_maximum_items_per_page: 18
     stateless: true
     cache_headers:
       vary: ["Content-Type", "Authorization", "Origin"]
