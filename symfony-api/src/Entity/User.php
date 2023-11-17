@@ -7,11 +7,12 @@ use App\Entity\TaskList;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use App\EventListener\UserListener;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\GetCollection;
-use App\EventListener\UserListener;
 use Doctrine\Common\Collections\Collection;
 use App\Interface\CreatedDateEntityInterface;
 use App\EventListener\CreatedDateEntityListener;
@@ -36,7 +37,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
         ),
         new GetCollection(),
-        new Post(denormalizationContext: ['groups' => ['post']]),
+        new Post(),
+        new Delete(uriTemplate: "/user/{id}", security: "is_granted('IS_AUTHENTICATED_FULLY')",),
         // new Put(
         //     uriTemplate: "/user/{id}",
         //     security: "is_granted('IS_AUTHENTICATED_FULLY') and object == user",
@@ -45,6 +47,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         // )
     ],
     normalizationContext: ['groups' => ['get']],
+    denormalizationContext: ['groups' => ['post']]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CreatedDateEntityInterface
 {
@@ -55,22 +58,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
     private int $id;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['get', 'post', 'put'])]
+    #[Groups(['get', 'post'])]
     #[Assert\NotBlank()]
     #[Assert\Length(null, 6, 255)]
     private string $username;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(groups: ["post"])]
+    #[Assert\NotBlank()]
     #[Groups(['post'])]
     #[Assert\Regex(
         "/(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{7,}/",
-        "Password must be at least 7 characters long and contain at least : one digit, one upper case letter and one lower case letter.",
-        groups: ["post"]
+        "Password must be at least 7 characters long and contain at least : one digit, one upper case letter and one lower case letter."
     )]
     private string $password;
 
-    #[Assert\NotBlank(groups: ["post"])]
+    #[Assert\NotBlank()]
     #[Groups(['post'])]
     #[Assert\Expression(
         "this.getPassword() === this.getConfirmPassword()",
@@ -193,7 +195,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
         return $this->tasks;
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
