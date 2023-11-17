@@ -1,0 +1,27 @@
+api_platform:
+  title: MPP Test API Platform
+  version: 1.0.0
+  formats:
+    jsonld: ["application/ld+json"]
+    json: ["application/json"]
+  docs_formats:
+    jsonld: ["application/ld+json"]
+    json: ["application/json"]
+    jsonopenapi: ["application/vnd.openapi+json"]
+    html: ["text/html"]
+  defaults:
+    pagination_enabled: true
+    pagination_items_per_page: 6
+    pagination_maximum_items_per_page: 18
+    stateless: true
+    cache_headers:
+      max_age: 0
+      shared_max_age: 3600
+      vary: ["Content-Type", "Authorization", "Origin"]
+    extra_properties:
+      standard_put: true
+      rfc_7807_compliant_errors: true
+  event_listeners_backward_compatibility_layer: false
+  keep_legacy_inflector: false
+  exception_to_status:
+    App\Exception\EmptyBodyException: 400
