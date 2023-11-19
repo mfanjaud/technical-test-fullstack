@@ -10,13 +10,10 @@ export class SvgDefinitionsComponent implements OnInit {
 
   constructor(elRef: ElementRef, private elementsService: ElementsService) {
     this.elRef = elRef;
-    console.log('hello');
   }
 
   ngOnInit() {
-    console.log('there');
     if (this.elementsService.svgHtml === undefined) {
-      console.log('here');
       this.elementsService.svgHtml =
         this.elementsService.invokeSetSvgHtml.subscribe(() => {
           this.elementsService.setSvgHtml(this.convertSVGtoHtml());

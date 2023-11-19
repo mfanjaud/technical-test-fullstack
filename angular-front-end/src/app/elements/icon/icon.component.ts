@@ -32,7 +32,6 @@ export class IconComponent {
   }
 
   set name(value: string) {
-    console.log('name value: ', value);
     if (typeof value === 'string') {
       this._name = value;
     } else {
@@ -65,10 +64,6 @@ export class IconComponent {
 
   private _name = '';
   private _color = '';
-
-  constructor() {
-    console.log(this.name, this.svgClass);
-  }
 
   get absUrl() {
     return window.location.href;
