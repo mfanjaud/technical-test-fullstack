@@ -16,6 +16,11 @@ svg {
   width: 14px;
 }
 
+.size-16 {
+  height: 16px;
+  width: 16px;
+}
+
 .size-18 {
   height: 18px;
   width: 18px;
@@ -71,6 +76,14 @@ svg {
 
 .grey {
   fill: $color-dark-grey;
+}
+
+.gold {
+  fill: $color-gold;
+
+  &:hover {
+    fill: $color-medium-blue;
+  }
 }
 
 .link {

@@ -1,1 +1,18 @@
-<p>search-form works!</p>
+<form class="d-flex align-items-center" [formGroup]="searchForm">
+  <mat-form-field class="flex-grow-1">
+    <mat-label>Search</mat-label>
+    <input matInput placeholder="search" formControlName="searchControl" />
+  </mat-form-field>
+  <button
+    mat-flat-button
+    type="submit"
+    class="ms-2 p-3 light-border-btn rounded"
+  >
+    <app-icon
+      svgClass="size-16"
+      class="ms-auto"
+      color="gold"
+      name="icon-magnifier"
+    ></app-icon>
+  </button>
+</form>

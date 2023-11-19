@@ -1,1 +1,12 @@
-<p>task-list-grid works!</p>
+<div class="d-block w-auto h-100 m-2">
+  <app-search-form class="mb-2"></app-search-form>
+  <app-sort class="mb-2"></app-sort>
+
+  <mat-grid-list cols="2" gutterSize="20" rowHeight="3:4">
+    @for(tile of [].constructor(10); track tile){
+    <mat-grid-tile>
+      <app-task-list></app-task-list>
+    </mat-grid-tile>
+    }
+  </mat-grid-list>
+</div>

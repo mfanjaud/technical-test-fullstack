@@ -32,6 +32,29 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+button {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  min-height: 50px;
+
+  &:hover {
+    background-color: rgba($color-gold, 0.1);
+  }
+
+  &.light-border-btn {
+    color: $color-white;
+    border-color: $color-white;
+    border-width: 2px;
+    border-style: solid;
+
+    &:hover {
+      border-color: $color-gold;
+      background-color: transparent;
+    }
+  }
+}
+
 /** Alerts **/
 
 .snackbar-error {
