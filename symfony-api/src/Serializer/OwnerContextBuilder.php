@@ -5,6 +5,7 @@ namespace App\Serializer;
 use App\Entity\Task;
 use Symfony\Component\HttpFoundation\Request;
 use ApiPlatform\Serializer\SerializerContextBuilderInterface;
+use App\Entity\TaskList;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
