@@ -2,18 +2,16 @@
   <a class="me-auto" routerLink="/">
     <img class="logo" src="{{ logoPath }}" />
   </a>
-  <ng-container *ngIf="isLoggedIn; else notLoggedYet">
-    <a routerLink="/new-task" routerLinkActive="new-task-svg-active">
-      <app-icon svgClass="size-24" color="white" name="icon-plus"> </app-icon>
-    </a>
-    <a (click)="onLogout()">
-      <app-icon svgClass="size-24" color="white" name="icon-logout"> </app-icon>
-    </a>
-  </ng-container>
-
-  <ng-template #notLoggedYet>
-    <a (click)="onConnect()">
-      <app-icon svgClass="size-24" color="white" name="icon-login"> </app-icon>
-    </a>
-  </ng-template>
+  @if(isLoggedIn$ | async) {
+  <a routerLink="/new-task" routerLinkActive="new-task-svg-active">
+    <app-icon svgClass="size-24" color="white" name="icon-plus"> </app-icon>
+  </a>
+  <a (click)="onLogout()">
+    <app-icon svgClass="size-24" color="white" name="icon-logout"> </app-icon>
+  </a>
+  } @else {
+  <a (click)="onConnect()">
+    <app-icon svgClass="size-24" color="white" name="icon-login"> </app-icon>
+  </a>
+  }
 </nav>

@@ -2,11 +2,29 @@
   <app-search-form class="mb-2"></app-search-form>
   <app-sort class="mb-2"></app-sort>
 
-  <mat-grid-list cols="2" gutterSize="20" rowHeight="3:4">
-    @for(tile of [].constructor(10); track tile){
+  <!-- EMPTY STATE TEMPLATE  -->
+  <ng-template #emptyState>
+    <app-empty-state
+      (clickActionEvent)="addNewTaskList()"
+      [mode]="DISPLAY_MODE.DARK"
+      [isLoggedIn]="(isLoggedIn$ | async) ?? false"
+    ></app-empty-state>
+  </ng-template>
+
+  @if(taskLists$ | async; as taskLists){ @if(taskLists.length > 0) {
+  <mat-grid-list cols="2" gutterSize="20" rowHeight="1:1">
+    @for(list of taskLists; track list.id){
     <mat-grid-tile>
-      <app-task-list></app-task-list>
+      <app-task-list
+        [taskList]="list"
+        [isLoggedIn]="(isLoggedIn$ | async) ?? false"
+      ></app-task-list>
     </mat-grid-tile>
     }
   </mat-grid-list>
+  } @else {
+  <ng-container *ngTemplateOutlet="emptyState"></ng-container>
+  } } @else {
+  <ng-container *ngTemplateOutlet="emptyState"></ng-container>
+  }
 </div>

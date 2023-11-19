@@ -3,8 +3,7 @@
 // Classic
 $color-white: #ffffff;
 $color-black: #000000;
-$color-grey: #fafafa;
-$color-dark-grey: #404040;
+$color-grey: #404040;
 
 // Theme
 $color-dark-blue: #0a1828;
@@ -12,3 +11,11 @@ $color-medium-blue: #193d65;
 $color-clear-blue: #458daa;
 $color-turquoise: #178582;
 $color-gold: #bfa181;
+
+.font-black {
+  color: $color-black;
+}
+
+.font-white {
+  color: $color-white;
+}

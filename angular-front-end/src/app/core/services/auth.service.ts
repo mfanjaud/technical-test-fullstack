@@ -2,7 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { environment } from '@environment/environment';
-import { CreateUserReq, LogInUserReq, User } from '@app/core/models/users';
+import {
+  CreateUserRequest,
+  LogInUserRequest,
+  User,
+} from '@app/core/models/users';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { TokenResponse } from '../models/token';
@@ -26,7 +30,7 @@ export class AuthService {
     return this.tokenSubject.value;
   }
 
-  public loginUser(userReq: LogInUserReq): Observable<string> {
+  public loginUser(userReq: LogInUserRequest): Observable<string> {
     return this.http
       .post<TokenResponse>(
         `${environment.apiUrl}/login_check`,
@@ -48,7 +52,7 @@ export class AuthService {
     this.tokenSubject.next(null);
   }
 
-  public createUser(user: CreateUserReq): Observable<any> {
+  public createUser(user: CreateUserRequest): Observable<any> {
     return this.http.post(
       `${environment.apiUrl}/auth/register`,
       user,

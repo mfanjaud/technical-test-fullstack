@@ -1,0 +1,26 @@
+<div
+  class="d-flex flex-column align-items-center justify-content-center w-100 h-100"
+>
+  <h3 [ngClass]="{ 'font-white': mode === DISPLAY_MODE.DARK }">
+    No more things to do 🙌
+  </h3>
+  @if(isLoggedIn){
+  <button
+    (click)="clickActionEvent.emit()"
+    mat-flat-button
+    type="submit"
+    [ngClass]="
+      mode === DISPLAY_MODE.DARK ? 'light-border-btn ' : 'dark-border-btn '
+    "
+    class="ms-2 p-3 rounded d-flex align-items-center"
+  >
+    <app-icon
+      svgClass="size-16"
+      class="me-2"
+      color="gold"
+      name="icon-plus"
+    ></app-icon>
+    <span>Add a new task list</span>
+  </button>
+  }
+</div>

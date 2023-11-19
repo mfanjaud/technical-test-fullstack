@@ -1,12 +1,18 @@
 <mat-card class="d-flex flex-column py-2 h-100">
   <div class="px-2">
-    <h2>Task title</h2>
-    <p>Description</p>
+    <h2>{{ taskList.name }}</h2>
+    @if(taskList.description !== ''){
+    <p>{{ taskList.description }}</p>
+    }
   </div>
   <mat-divider></mat-divider>
   <app-search-form></app-search-form>
   <mat-divider></mat-divider>
-  <button class="d-flex align-items-center justify-content-center w-100 p-1">
+  @if(isLoggedIn) {
+  <button
+    (click)="clickaddTaskEvent.emit()"
+    class="d-flex align-items-center justify-content-center w-100 p-1"
+  >
     <app-icon
       svgClass="size-18"
       class="me-1"
@@ -16,22 +22,28 @@
     <p class="m-0">Add a new Task</p>
   </button>
   <mat-divider></mat-divider>
+  }
   <div class="flex-grow-1 overflow-y-scroll">
-    @for(task of [].constructor(10); track task) {
-    <app-task></app-task>
+    @for(task of taskList.tasks; track task) {
+    <app-task [task]="task" [isLoggedIn]="isLoggedIn"></app-task>
     <mat-divider></mat-divider>
+    } @empty {
+    <app-empty-state
+      (clickActionEvent)="clickaddTaskEvent.emit()"
+      [mode]="DISPLAY_MODE.LIGHT"
+      [isLoggedIn]="isLoggedIn"
+    ></app-empty-state>
     }
   </div>
-
-  <div>
-    <button class="d-flex align-items-center justify-content-center w-100 p-2">
-      <app-icon
-        svgClass="size-18"
-        class="me-1"
-        color="gold"
-        name="icon-delete"
-      ></app-icon>
-      <p class="m-0">Suppress</p>
-    </button>
-  </div>
+  @if(isLoggedIn) {
+  <button class="d-flex align-items-center justify-content-center w-100 p-2">
+    <app-icon
+      svgClass="size-18"
+      class="me-1"
+      color="gold"
+      name="icon-delete"
+    ></app-icon>
+    <p class="m-0">Suppress</p>
+  </button>
+  }
 </mat-card>

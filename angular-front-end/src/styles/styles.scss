@@ -53,6 +53,16 @@ button {
       background-color: transparent;
     }
   }
+  &.dark-border-btn {
+    border-color: $color-dark-blue;
+    border-width: 2px;
+    border-style: solid;
+
+    &:hover {
+      border-color: $color-gold;
+      background-color: transparent;
+    }
+  }
 }
 
 /** Alerts **/

@@ -26,7 +26,7 @@ final class OwnerContextBuilder implements SerializerContextBuilderInterface
 
     public function createFromRequest(Request $request, bool $normalization, ?array $extractedAttributes = null): array
     {
-        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()?->getUser() ?? null;
         $context = $this->decorated->createFromRequest($request, $normalization, $extractedAttributes);
         $object = $request->attributes->get('data');
         $isLoggedIn = $this->authorizationChecker->isGranted('IS_AUTHENTICATED_FULLY');

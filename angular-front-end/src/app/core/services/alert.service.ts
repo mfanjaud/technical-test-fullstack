@@ -32,7 +32,7 @@ export class AlertService {
     this._snackBar.open(message, undefined, {
       duration: 8000,
       verticalPosition: 'top',
-      horizontalPosition: 'end',
+      horizontalPosition: 'center',
       panelClass: ['snackbar-success'],
     });
   }
@@ -40,9 +40,9 @@ export class AlertService {
   error(message: string, showAfterRedirect = false) {
     this.showAfterRedirect = showAfterRedirect;
     this._snackBar.open(message, undefined, {
-      //   duration: 8000,
+      duration: 8000,
       verticalPosition: 'top',
-      horizontalPosition: 'end',
+      horizontalPosition: 'center',
       panelClass: ['snackbar-error'],
     });
   }

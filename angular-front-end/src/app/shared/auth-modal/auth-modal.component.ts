@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { AlertService } from '@app/core/services/alert.service';
 import { ReplaySubject, filter, takeUntil, tap } from 'rxjs';
-import { CreateUserReq } from '../../core/models/users';
+import { CreateUserRequest } from '../../core/models/users';
 import { AuthService } from '../../core/services/auth.service';
 import { ElementsModule } from '../../elements/elements.module';
 
@@ -126,7 +126,7 @@ export class AuthModalComponent implements OnInit, OnDestroy {
 
   public onSignUp(): void {
     if (this.signUpFormGroup.invalid) return;
-    const newUser: CreateUserReq = this.signUpFormGroup.getRawValue();
+    const newUser: CreateUserRequest = this.signUpFormGroup.getRawValue();
     this._usersService
       .createUser(newUser)
       .pipe(takeUntil(this._destroyed$))

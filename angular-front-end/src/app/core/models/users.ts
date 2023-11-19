@@ -3,13 +3,13 @@ export interface User {
   username: string;
 }
 
-export interface CreateUserReq extends User {
+export interface CreateUserRequest extends User {
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-export interface LogInUserReq {
+export interface LogInUserRequest {
   username: string;
   password: string;
 }

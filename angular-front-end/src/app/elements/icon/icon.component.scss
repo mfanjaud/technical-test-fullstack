@@ -1,4 +1,4 @@
-@import "../../../styles/colors.scss";
+@import "@styles/colors.scss";
 
 /* Style global */
 svg {
@@ -75,7 +75,7 @@ svg {
 }
 
 .grey {
-  fill: $color-dark-grey;
+  fill: $color-grey;
 }
 
 .gold {
