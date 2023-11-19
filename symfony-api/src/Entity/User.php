@@ -37,7 +37,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
         ),
         new GetCollection(),
-        new Post(),
+        new Post(uriTemplate: "/auth/register"),
         new Delete(uriTemplate: "/user/{id}", security: "is_granted('IS_AUTHENTICATED_FULLY')",),
         // new Put(
         //     uriTemplate: "/user/{id}",

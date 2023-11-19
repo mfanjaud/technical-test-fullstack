@@ -106,13 +106,10 @@ export class AuthModalComponent implements OnInit, OnDestroy {
   }
 
   public onLogin(): void {
-    console.log('first');
     if (this.logInFormGroup.invalid) return;
-    console.log('then');
     this._usersService
       .loginUser(this.logInFormGroup.getRawValue())
       .pipe(
-        tap((res) => console.log('here', res)),
         filter((res) => res !== ''),
         takeUntil(this._destroyed$)
       )
@@ -122,17 +119,14 @@ export class AuthModalComponent implements OnInit, OnDestroy {
           this.dialogRef.close();
         },
         error: (error) => {
-          console.log(error);
           this._alertService.error(error.error.message);
         },
       });
   }
 
   public onSignUp(): void {
-    console.log('heho');
     if (this.signUpFormGroup.invalid) return;
     const newUser: CreateUserReq = this.signUpFormGroup.getRawValue();
-    console.log(newUser);
     this._usersService
       .createUser(newUser)
       .pipe(takeUntil(this._destroyed$))
@@ -140,10 +134,8 @@ export class AuthModalComponent implements OnInit, OnDestroy {
         next: (res) => {
           this._alertService.success('You can acces your account now !');
           this.chosenSubmitType = SUBMIT_TYPE.LOGIN;
-          console.log(res);
         },
         error: (error) => {
-          console.log(error);
           this._alertService.error(error.error.message);
         },
       });
