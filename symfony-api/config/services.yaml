@@ -34,3 +34,8 @@ services:
   App\EventListener\CreatedDateEntityListener:
     arguments: ["@request_stack"]
     tags: ["doctrine.orm.entity_listener"]
+
+  App\Serializer\OwnerContextBuilder:
+    decorates: "api_platform.serializer.context_builder"
+    arguments: ['@App\Serializer\OwnerContextBuilder.inner']
+    autoconfigure: false

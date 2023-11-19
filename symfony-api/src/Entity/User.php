@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Task;
 use App\Entity\TaskList;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\Post;
 use Doctrine\DBAL\Types\Types;
 use ApiPlatform\Metadata\Delete;
@@ -37,17 +38,19 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
             security: "is_granted('IS_AUTHENTICATED_FULLY')",
         ),
         new GetCollection(),
-        new Post(uriTemplate: "/auth/register"),
+        new Post(uriTemplate: "/auth/register", denormalizationContext: ['groups' => ['post']],),
         new Delete(uriTemplate: "/user/{id}", security: "is_granted('IS_AUTHENTICATED_FULLY')",),
         // new Put(
         //     uriTemplate: "/user/{id}",
         //     security: "is_granted('IS_AUTHENTICATED_FULLY') and object == user",
         //     denormalizationContext: ['groups' => ['put']],
         //     deserialize: false,
-        // )
+        // ) TODO - allow user to edit hos credentials
     ],
     normalizationContext: ['groups' => ['get']],
-    denormalizationContext: ['groups' => ['post']]
+    extraProperties: [
+        'standard_put' => true,
+    ]
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, CreatedDateEntityInterface
 {
@@ -76,8 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, Created
     #[Groups(['post'])]
     #[Assert\Expression(
         "this.getPassword() === this.getConfirmPassword()",
-        "Passwords do not match.",
-        groups: ["post"]
+        "Passwords do not match."
     )]
     private string $confirmPassword;
 
