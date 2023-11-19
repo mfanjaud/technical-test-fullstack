@@ -1,0 +1,47 @@
+/* App Mat Styles */
+@use "@angular/material" as mat;
+
+/** Variables **/
+
+@import "./colors.scss";
+
+/** Global **/
+
+html,
+body {
+  height: 100%;
+  background-color: $color-dark-blue;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/** Global **/
+
+.d-none {
+  display: none;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/** Alerts **/
+
+.snackbar-error {
+  .mdc-snackbar__surface {
+    background-color: rgba(red, 0.5) !important;
+  }
+}
+
+.snackbar-success {
+  .mdc-snackbar__surface {
+    background-color: rgba(green, 0.5) !important;
+  }
+}

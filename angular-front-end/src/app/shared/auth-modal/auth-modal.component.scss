@@ -1,0 +1,29 @@
+@import "../../../styles/colors.scss";
+
+.container {
+  background-color: $color-turquoise;
+  color: $color-white;
+
+  button {
+    border-width: 2;
+    border-style: solid;
+    border-color: $color-gold;
+    background-color: transparent;
+    color: $color-white;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $color-gold;
+    }
+  }
+
+  .mat-button-toggle-group-appearance-standard
+    .mat-button-toggle-appearance-standard {
+    background-color: $color-gold;
+    color: $color-white;
+    &.mat-button-toggle-checked {
+      opacity: 0.6;
+      background-color: transparent;
+    }
+  }
+}
