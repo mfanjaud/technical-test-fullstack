@@ -1,0 +1,57 @@
+<mat-card class="d-flex flex-column py-2 h-100">
+  <div class="px-2">
+    <h2>{{ taskList.name }}</h2>
+    @if(taskList.description !== ''){
+    <p>{{ taskList.description }}</p>
+    }
+  </div>
+  <mat-divider></mat-divider>
+  <app-search-form [disabled]="taskList.tasks.length === 0"></app-search-form>
+  <mat-divider></mat-divider>
+  @if(isLoggedIn) {
+  <button
+    (click)="clickaddTaskEvent.emit(taskList.id)"
+    class="d-flex align-items-center justify-content-center w-100 p-1"
+  >
+    <app-icon
+      svgClass="size-18"
+      class="me-1"
+      color="gold"
+      name="icon-plus"
+    ></app-icon>
+    <p class="m-0">{{ addLabel }}</p>
+  </button>
+  <mat-divider></mat-divider>
+  }
+  <div class="flex-grow-1 overflow-y-scroll">
+    @for(task of taskList.tasks; track task) {
+    <app-task
+      [task]="task"
+      [isLoggedIn]="isLoggedIn"
+      (deleteTaskEvent)="deleteTaskEvent.emit($event)"
+    ></app-task>
+    <mat-divider></mat-divider>
+    } @empty {
+    <app-empty-state
+      [buttonLabel]="addLabel"
+      (clickActionEvent)="clickaddTaskEvent.emit(taskList.id)"
+      [mode]="DISPLAY_MODE.LIGHT"
+      [isLoggedIn]="isLoggedIn"
+    ></app-empty-state>
+    }
+  </div>
+  @if(isLoggedIn) {
+  <button
+    class="d-flex align-items-center justify-content-center w-100 p-2"
+    (click)="deleteTaskListEvent.emit(taskList.id)"
+  >
+    <app-icon
+      svgClass="size-18"
+      class="me-1"
+      color="gold"
+      name="icon-delete"
+    ></app-icon>
+    <p class="m-0">Suppress</p>
+  </button>
+  }
+</mat-card>

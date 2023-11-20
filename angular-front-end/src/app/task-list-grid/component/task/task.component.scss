@@ -1,0 +1,6 @@
+@import "@styles/colors.scss";
+
+.completed {
+  color: $color-grey;
+  text-decoration-line: line-through;
+}

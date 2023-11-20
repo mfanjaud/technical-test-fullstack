@@ -39,7 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             ]
         ),
         new GetCollection(
-            order: ["dueDate" => "ASC", "completed" => "ASC"],
+            order: ["completed" => "ASC", "dueDate" => "ASC"],
             paginationEnabled: false
         ),
         new Post(
@@ -91,6 +91,10 @@ class Task implements AuthoredEntityInterface, CreatedDateEntityInterface
     #[ORM\Column]
     #[Groups(['get'])]
     private bool $completed;
+
+    #[ORM\Column]
+    #[Groups(['owner:get'])]
+    private bool $canDelete = true;
 
     public function getId(): int
     {
@@ -148,6 +152,18 @@ class Task implements AuthoredEntityInterface, CreatedDateEntityInterface
     public function setCompleted(bool $completed): static
     {
         $this->completed = $completed;
+
+        return $this;
+    }
+
+    public function getCanDelete(): bool
+    {
+        return $this->canDelete;
+    }
+
+    public function setCanDelete(): static
+    {
+        $this->canDelete = true;
 
         return $this;
     }

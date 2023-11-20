@@ -1,0 +1,14 @@
+<nav class="d-flex align-items-center justify-content-center">
+  <a class="me-auto" routerLink="/">
+    <img class="logo" src="{{ logoPath }}" />
+  </a>
+  @if(isLoggedIn$ | async) {
+  <a (click)="onLogout()">
+    <app-icon svgClass="size-24" color="white" name="icon-logout"> </app-icon>
+  </a>
+  } @else {
+  <a (click)="onConnect()">
+    <app-icon svgClass="size-24" color="white" name="icon-login"> </app-icon>
+  </a>
+  }
+</nav>

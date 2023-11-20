@@ -1,0 +1,12 @@
+@import "../../../styles/colors.scss";
+
+nav {
+  gap: 25px;
+  border-bottom: solid 1px $color-gold;
+  padding: 15px;
+
+  .logo {
+    height: 50px;
+    width: auto;
+  }
+}

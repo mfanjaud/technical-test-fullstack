@@ -1,0 +1,37 @@
+<div class="d-flex flex-column p-3 container" [formGroup]="addTaskListForm">
+  <mat-form-field appearance="outline" class="mb-1">
+    <mat-label>Name</mat-label>
+    <input
+      type="text"
+      matInput
+      placeholder="name"
+      [class.is-invalid]="
+        addTaskListForm.get('name')?.invalid &&
+        addTaskListForm.get('name')?.touched
+      "
+      formControlName="name"
+    />
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="mb-1">
+    <mat-label>Description</mat-label>
+    <input
+      type="text"
+      matInput
+      placeholder="description"
+      [class.is-invalid]="
+        addTaskListForm.get('description')?.invalid &&
+        addTaskListForm.get('description')?.touched
+      "
+      formControlName="description"
+    />
+  </mat-form-field>
+
+  <button
+    mat-flat-button
+    type="submit"
+    class="w-100 mt-4 light-border-btn rounded"
+    (click)="onAddTaskList()"
+  >
+    Add
+  </button>
+</div>

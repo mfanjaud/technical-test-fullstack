@@ -1,0 +1,23 @@
+<div class="d-flex align-items-center p-2">
+  @if(isLoggedIn){
+  <mat-checkbox
+    class="me-2"
+    [(ngModel)]="task.completed"
+    (change)="setTaskStatusEvent.emit({ isDone: $event.checked, id: task.id })"
+  ></mat-checkbox>
+  }
+
+  <p class="m-0" [ngClass]="{ completed: task.completed }">
+    {{ task.name }} - <i>due date : {{ task.dueDate | date : "dd/MM/yyyy" }}</i>
+  </p>
+
+  @if(isLoggedIn) {
+  <app-icon
+    (click)="deleteTaskEvent.emit(task.id)"
+    svgClass="size-16"
+    class="ms-auto px-2"
+    color="gold"
+    name="icon-delete"
+  ></app-icon>
+  }
+</div>
