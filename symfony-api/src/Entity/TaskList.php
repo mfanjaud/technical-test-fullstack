@@ -17,7 +17,6 @@ use App\Interface\AuthoredEntityInterface;
 use Doctrine\Common\Collections\Collection;
 use App\EventListener\AuthoredEntityListener;
 use App\Interface\CreatedDateEntityInterface;
-use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use App\EventListener\CreatedDateEntityListener;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -48,9 +47,6 @@ use Symfony\Component\Validator\Constraints as Assert;
     normalizationContext: ['groups' => ['get']],
     denormalizationContext: ['groups' => ['post']],
 )]
-#[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'description' => 'partial'])]
-#[ApiFilter(DateFilter::class, properties: ['createdAt'])]
-#[ApiFilter(OrderFilter::class, properties: ['createdAt', 'name'])]
 class TaskList implements AuthoredEntityInterface, CreatedDateEntityInterface
 {
     #[ORM\Id]
@@ -61,6 +57,8 @@ class TaskList implements AuthoredEntityInterface, CreatedDateEntityInterface
 
     #[ORM\Column(length: 255)]
     #[Groups(['get', 'post'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[ApiFilter(OrderFilter::class)]
     #[Assert\NotBlank()]
     #[Assert\Length(null, 3, 255)]
     private string $name;
@@ -70,6 +68,7 @@ class TaskList implements AuthoredEntityInterface, CreatedDateEntityInterface
     private ?string $description = null;
 
     #[ORM\Column(type: "datetime")]
+    #[ApiFilter(OrderFilter::class)]
     #[Groups(['get'])]
     private \DateTime $createdAt;
 

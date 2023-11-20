@@ -1,10 +1,29 @@
 <div class="d-block w-auto h-100 m-2">
-  <app-search-form class="mb-2"></app-search-form>
-  <app-sort class="mb-2"></app-sort>
+  <app-search-form
+    class="mb-2"
+    (searchEvent)="searchTaskList($event)"
+  ></app-search-form>
+  <div class="d-flex align-items-center mb-2">
+    <app-sort
+      [sortFields]="taskListSortFields"
+      (sortEvent)="sortTaskList($event)"
+    ></app-sort>
+    @if(isLoggedIn$ | async ){
+    <button
+      (click)="addNewTaskList()"
+      mat-flat-button
+      type="submit"
+      class="ms-2 p-3 rounded d-flex align-items-center light-border-btn"
+    >
+      <app-icon svgClass="size-16" color="gold" name="icon-plus"></app-icon>
+    </button>
+    }
+  </div>
 
   <!-- EMPTY STATE TEMPLATE  -->
   <ng-template #emptyState>
     <app-empty-state
+      buttonLabel="Add a new task list"
       (clickActionEvent)="addNewTaskList()"
       [mode]="DISPLAY_MODE.DARK"
       [isLoggedIn]="(isLoggedIn$ | async) ?? false"
@@ -17,6 +36,9 @@
     <mat-grid-tile>
       <app-task-list
         [taskList]="list"
+        (clickaddTaskEvent)="addNewTaskToList($event)"
+        (deleteTaskEvent)="deleteTask($event)"
+        (deleteTaskListEvent)="deleteTaskList($event)"
         [isLoggedIn]="(isLoggedIn$ | async) ?? false"
       ></app-task-list>
     </mat-grid-tile>
@@ -27,4 +49,13 @@
   } } @else {
   <ng-container *ngTemplateOutlet="emptyState"></ng-container>
   }
+  <mat-paginator
+    (page)="loagGridOnChange($event)"
+    [length]="100"
+    [pageSizeOptions]="pageSizes"
+    [pageIndex]="paginatorSetup.pageIndex"
+    [pageSize]="paginatorSetup.pageSize"
+    aria-label="Select page"
+  >
+  </mat-paginator>
 </div>

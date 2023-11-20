@@ -5,16 +5,16 @@ import { Observable, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
-  private subject = new Subject<any>();
-  private showAfterRedirect = false;
+  private _subject = new Subject<any>();
+  private _showAfterRedirect = false;
 
-  constructor(private router: Router, private _snackBar: MatSnackBar) {
+  constructor(private _router: Router, private _snackBar: MatSnackBar) {
     // clear alert messages on route change unless 'showAfterRedirect' flag is true
-    this.router.events.subscribe((event) => {
+    this._router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
-        if (this.showAfterRedirect) {
+        if (this._showAfterRedirect) {
           // only keep for a single route change
-          this.showAfterRedirect = false;
+          this._showAfterRedirect = false;
         } else {
           // clear alert message
           this.clear();
@@ -24,11 +24,11 @@ export class AlertService {
   }
 
   onAlert(): Observable<any> {
-    return this.subject.asObservable();
+    return this._subject.asObservable();
   }
 
   success(message: string, showAfterRedirect = false) {
-    this.showAfterRedirect = showAfterRedirect;
+    this._showAfterRedirect = showAfterRedirect;
     this._snackBar.open(message, undefined, {
       duration: 8000,
       verticalPosition: 'top',
@@ -38,7 +38,7 @@ export class AlertService {
   }
 
   error(message: string, showAfterRedirect = false) {
-    this.showAfterRedirect = showAfterRedirect;
+    this._showAfterRedirect = showAfterRedirect;
     this._snackBar.open(message, undefined, {
       duration: 8000,
       verticalPosition: 'top',
@@ -49,6 +49,6 @@ export class AlertService {
 
   clear() {
     // clear by calling subject.next() with null
-    this.subject.next(null);
+    this._subject.next(null);
   }
 }

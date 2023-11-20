@@ -33,7 +33,10 @@ export class TaskListComponent {
   @Input() taskList!: TaskList;
   @Input() isLoggedIn!: boolean;
 
-  @Output() clickaddTaskEvent = new EventEmitter<void>();
+  @Output() clickaddTaskEvent = new EventEmitter<number>();
+  @Output() deleteTaskEvent = new EventEmitter<number>();
+  @Output() deleteTaskListEvent = new EventEmitter<number>();
 
   public DISPLAY_MODE = DISPLAY_MODE;
+  public addLabel = 'Add a new task';
 }

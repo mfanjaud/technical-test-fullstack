@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { ElementsService } from '../../elements.service';
+import { ElementsService } from '../../../core/services/elements.service';
 
 @Component({
   selector: 'svg-definitions',

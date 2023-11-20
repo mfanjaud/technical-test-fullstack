@@ -3,9 +3,6 @@
     <img class="logo" src="{{ logoPath }}" />
   </a>
   @if(isLoggedIn$ | async) {
-  <a routerLink="/new-task" routerLinkActive="new-task-svg-active">
-    <app-icon svgClass="size-24" color="white" name="icon-plus"> </app-icon>
-  </a>
   <a (click)="onLogout()">
     <app-icon svgClass="size-24" color="white" name="icon-logout"> </app-icon>
   </a>

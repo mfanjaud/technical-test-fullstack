@@ -1,46 +1,43 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-import { environment } from '@environment/environment';
-import {
-  CreateUserRequest,
-  LogInUserRequest,
-  User,
-} from '@app/core/models/users';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { CreateUserRequest, LogInUserRequest } from '@app/core/models/users';
+import { environment } from '@environment/environment';
+import { BehaviorSubject, Observable, map } from 'rxjs';
 import { TokenResponse } from '../models/token';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
-  private tokenSubject: BehaviorSubject<string | null>;
   public token: Observable<string | null>;
 
-  constructor(private router: Router, private http: HttpClient) {
-    this.tokenSubject = new BehaviorSubject(
+  private _httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  };
+  private _tokenSubject: BehaviorSubject<string | null>;
+
+  constructor(private _httpClient: HttpClient) {
+    this._tokenSubject = new BehaviorSubject(
       JSON.parse(localStorage.getItem('token')!)
     );
-    this.token = this.tokenSubject.asObservable();
+    this.token = this._tokenSubject.asObservable();
   }
 
   public get tokenValue() {
-    return this.tokenSubject.value;
+    return this._tokenSubject.value;
   }
 
   public loginUser(userReq: LogInUserRequest): Observable<string> {
-    return this.http
+    return this._httpClient
       .post<TokenResponse>(
         `${environment.apiUrl}/login_check`,
         userReq,
-        this.httpOptions
+        this._httpOptions
       )
       .pipe(
         map((res) => {
           localStorage.setItem('token', JSON.stringify(res.token));
-          this.tokenSubject.next(res.token);
+          this._tokenSubject.next(res.token);
           return res.token;
         })
       );
@@ -49,14 +46,14 @@ export class AuthService {
   public logoutUser() {
     // remove user from local storage and set current user to null
     localStorage.removeItem('token');
-    this.tokenSubject.next(null);
+    this._tokenSubject.next(null);
   }
 
   public createUser(user: CreateUserRequest): Observable<any> {
-    return this.http.post(
+    return this._httpClient.post(
       `${environment.apiUrl}/auth/register`,
       user,
-      this.httpOptions
+      this._httpOptions
     );
   }
 

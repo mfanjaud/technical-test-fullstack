@@ -3,19 +3,20 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable()
 export class ElementsService {
-  private setSvgSubject = new BehaviorSubject<string[]>([]);
   public invokeSetSvgHtml = new EventEmitter();
   public svgHtml = new Subscription();
+
+  private _setSvgSubject = new BehaviorSubject<string[]>([]);
 
   public onloadSetSvgHtml() {
     this.invokeSetSvgHtml.emit();
   }
 
   public getSvgHtml() {
-    return this.setSvgSubject.asObservable();
+    return this._setSvgSubject.asObservable();
   }
 
   public setSvgHtml(svgConvertedHtml: string[]) {
-    this.setSvgSubject.next(svgConvertedHtml);
+    this._setSvgSubject.next(svgConvertedHtml);
   }
 }

@@ -6,6 +6,11 @@ export interface TaskListCollectionResponse {
   taskLists: TaskList[];
 }
 
+export interface AddTaskListRequest {
+  name: string;
+  description?: string;
+}
+
 export interface TaskList {
   id: number;
   name: string;

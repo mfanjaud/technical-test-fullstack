@@ -1,13 +1,8 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 import { ElementsModule } from '@app/elements/elements.module';
 
 @Component({
@@ -27,7 +22,16 @@ import { ElementsModule } from '@app/elements/elements.module';
   },
 })
 export class SearchFormComponent {
+  @Input() disabled!: boolean;
+
+  @Output() searchEvent = new EventEmitter<string>();
+
   public searchForm = new FormGroup({
     searchControl: new FormControl(''),
   });
+
+  public emitSearchEvent(): void {
+    const search = this.searchForm.getRawValue().searchControl ?? '';
+    this.searchEvent.emit(search);
+  }
 }

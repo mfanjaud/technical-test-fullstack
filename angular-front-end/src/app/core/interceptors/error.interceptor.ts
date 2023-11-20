@@ -10,13 +10,12 @@ export function errorInterceptor(
   const authService = inject(AuthService);
   return next(request).pipe(
     catchError((err) => {
-      if ([401, 403].includes(err.status)) {
-        // auto logout if 401 or 403 response returned from api
+      if (err.status === 401) {
+        // auto logout if 401 response returned from api
         authService.logoutUser();
       }
 
       const error = err.error?.message || err.statusText;
-      console.error(err);
       return throwError(() => error);
     })
   );

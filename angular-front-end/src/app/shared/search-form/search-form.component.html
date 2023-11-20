@@ -1,9 +1,14 @@
-<form class="d-flex align-items-center" [formGroup]="searchForm">
+<form
+  class="d-flex align-items-center"
+  [ngClass]="{ disabled: disabled }"
+  [formGroup]="searchForm"
+>
   <mat-form-field class="flex-grow-1">
     <mat-label>Search</mat-label>
     <input matInput placeholder="search" formControlName="searchControl" />
   </mat-form-field>
   <button
+    (click)="emitSearchEvent()"
     mat-flat-button
     type="submit"
     class="ms-2 p-3 light-border-btn rounded"

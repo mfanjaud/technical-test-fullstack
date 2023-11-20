@@ -7,3 +7,9 @@ export interface Task {
   dueDate: Date;
   author: User;
 }
+
+export interface CreateTaskRequest {
+  name: string;
+  dueDate: Date;
+  taskList: string;
+}

@@ -13,6 +13,7 @@ import { DISPLAY_MODE } from '@app/core/enums/diplay-mode';
 export class EmptyStateComponent {
   @Input() mode!: DISPLAY_MODE;
   @Input() isLoggedIn!: boolean;
+  @Input() buttonLabel!: string;
 
   @Output() clickActionEvent = new EventEmitter<void>();
 
