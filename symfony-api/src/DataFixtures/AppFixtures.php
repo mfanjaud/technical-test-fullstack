@@ -36,7 +36,6 @@ class AppFixtures extends Fixture
             $taskList->setName($name . $i);
             $taskList->setDescription($description . $i);
             $taskList->setCreatedAt(new \DateTime(""));
-            $taskList->setDeleted(false);
             $taskList->setAuthor($user);
             $this->setReference("task_list" . $i, $taskList);
 
@@ -65,11 +64,9 @@ class AppFixtures extends Fixture
                 $task->setName($taskNumber . $name);
                 $task->setDueDate($dueDate);
                 $task->setCreatedAt(new \DateTime(""));
-                $task->setDeleted(false);
                 $task->setAuthor($user);
                 $task->setTaskList($taskList);
                 $task->setCompleted($isCompleted);
-                $task->setDeleted(false);
 
                 $manager->persist($task);
             }
