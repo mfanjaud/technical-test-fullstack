@@ -23,7 +23,7 @@ class CreatedDateEntityListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$entity instanceof CreatedDateEntityInterface || !$request->isMethod("POST")) {
+        if (!$entity instanceof CreatedDateEntityInterface || !$request?->isMethod("POST")) {
             return;
         }
 
